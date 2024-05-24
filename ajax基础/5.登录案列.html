@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        .box-login{
+            width: 100%;
+            height: 300px;
+        }
+        form{
+            width: 300px;
+            height: 300px;
+            /* padding-top: 10px; */
+            margin:0 auto;
+        }
+        form input{
+            width: 300px;
+            height: 50px;
+            margin: 0 auto;
+            margin-top: 20px;
+            
+
+        }
+
+        form button{
+            margin:0 auto;
+            margin-top: 20px;
+            display: block;
+            width: 50px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="box-login">
+    <form action="" method="post" class="form-login">
+        <input type="text" name="user" id="1" placeholder="用户名" class="username">
+        <input type="password" name="pwd" id="2" placeholder="密码" class="password">
+        <button type="button" class="btn">登录</button>
+    </form>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+         document.querySelector('.btn').addEventListener('click',()=>{
+          let username =  document.querySelector('.box-login .username').value
+          let password =  document.querySelector('.box-login .password').value
+          console.log(username,password)
+          if (username.length<8){
+            alert('用户名小于8位')
+            return
+        }
+        if(password.length<6){
+            alert('密码小于6位')
+            return
+        }
+            axios({
+                url:'http://hmajax.itheima.net/api/login',
+                method:'post',
+                data:{
+                    username:username,
+                    password:password,
+                }
+                
+            }).then(re=>{
+                console.log(re)
+                    alert(re.data.message)
+            }).catch(error=>{
+                alert(error.response.data.message)
+            }
+            )
+         })
+    </script>
+</body>
+</html>

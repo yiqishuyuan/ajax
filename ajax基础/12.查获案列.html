@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input class="ps" type="text" placeholder="省份">
+    <input class="s" type="text" placeholder="市">
+    <input type="submit" value="查询" class="reserch">
+
+    <ul class="map-l">
+        <li class="item"></li>
+    </ul>
+    <script>
+        document.querySelector('.reserch').addEventListener('click', () => {
+            const pname = document.querySelector('.ps').value
+            const cname = document.querySelector('.s').value
+            // 组合参数
+            const allobj = {
+                pname,
+                cname,
+            }
+            // 使用内置函数
+            const paramsobj = new URLSearchParams(allobj)
+            // tostring拼接
+            const qstring = paramsobj.toString()
+            // 开始请求
+            const xhr = new XMLHttpRequest()
+            xhr.open('get', `http://hmajax.itheima.net/api/area?${qstring}`)
+            xhr.addEventListener('loadend', () => {
+
+                const data = JSON.parse(xhr.response)
+                const list_area = data.list
+                console.log(list_area)
+                let listli = list_area.map(re=>`<li class="item">${re}</li>`).join('')
+
+                document.querySelector('.map-l').innerHTML = listli
+            })
+            xhr.send()
+        })
+    </script>
+</body>
+
+</html>

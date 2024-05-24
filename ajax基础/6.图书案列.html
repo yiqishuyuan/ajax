@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .ip-info {
+            display: none;
+        }
+
+        .onin {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <button type="button" class="btn">添加</button>
+    <div class="ip-info">
+        <form action="" method="post">
+            <input type="text" name="namebox" id="" class="namebox">
+            <input type="text" name="nameinfo" id="" class="nameinfo">
+            <input type="text" name="where" id="" class="where">
+            <button type="button" class="input" id="tudex">提交</button>
+        </form>
+    </div>
+    <table class="box">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="list">
+            <tr>
+                <td>1</td>
+                <td>西游记</td>
+                <td>不知道</td>
+                <td>人民出版者</td>
+                <td><a href="#" class="del">删除</a><a href="#" class="req">编辑</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let text = document.querySelector('.ip-info')
+        // 查
+        function getbooks() {
+            axios({
+                url: 'http://hmajax.itheima.net/api/books',
+                params: {
+                    // 安全令
+                    creator: 'lily'
+                }
+            }).then(re => {
+                // console.log(re.data.data)
+                const li = re.data.data
+                // console.log(li)
+                let listbooks = li.map((item, index) => {
+                    return `
+                    <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.bookname}</td>
+                    <td>${item.author}</td>
+                    <td>${item.publisher}</td>
+                    <td data-id="${item.id}"><a href="#" class="del">删除</a><a href="#" class="req">编辑</a></td>
+                    </tr>
+                    `
+                }).join('')
+                document.querySelector('.box tbody').innerHTML = listbooks
+                // console.log(listbooks)
+            })
+        }
+        getbooks()
+        //监听·
+        function ad() {
+            document.querySelector('.btn').addEventListener('click', () => {
+
+                text.classList.add('onin')
+                add()
+
+            })
+
+
+        }
+        ad()
+        //添加
+        function add() {
+
+            document.querySelector('.ip-info form .input').addEventListener('click', () => {
+
+                let bookname = document.querySelector('.ip-info form .namebox').value
+                let author = document.querySelector('.ip-info form .nameinfo').value
+                let publisher = document.querySelector('.ip-info form .where').value
+                console.log(bookname, author, publisher)
+                axios({
+                    url: 'http://hmajax.itheima.net/api/books',
+                    method: 'post',
+                    data: {
+                        creator: 'lily',
+                        bookname: bookname,
+                        author: author,
+                        publisher: publisher
+
+                    }
+                }).then(re => {
+                    console.log(re)
+                    getbooks()
+                })
+                text.classList.remove('inon')
+
+            })
+
+
+        }
+        // 删除
+        function del() {
+            document.querySelector('.list').addEventListener('click', (e) => {
+                //  console.log('删除') 事件委托
+                console.log(e.target.classList.value === 'del')
+                if (e.target.classList.value === 'del') {
+                    console.log('删除')
+                    // console.log(e.target.parentNode.dataset.id)
+                    let theid = e.target.parentNode.dataset.id
+                    axios({
+                        url: `http://hmajax.itheima.net/api/books/${theid}`,
+                        method: 'DELETE',
+
+                    }).then(re => {
+                        getbooks()
+                        alert('删除成功')
+                    })
+                }
+            })
+        }
+        del()
+        // 编辑图书
+        function overfull() {
+
+            document.querySelector('.list').addEventListener('click', (e) => {
+                console.log(e.target.classList.value)
+                text.classList.add('onin')
+                theid = e.target.parentNode.dataset.id
+                axios({
+                    url: `http://hmajax.itheima.net/api/books/${theid}`,
+                }).then(re => {
+                    console.log(re.data.data)
+                    let dataset = re.data.data
+                    document.querySelector('.ip-info form .namebox').value = dataset['bookname']
+                    document.querySelector('.ip-info form .nameinfo').value = dataset['author']
+                    document.querySelector('.ip-info form .where').value = dataset['publisher']
+
+                })
+
+            })
+            // 更新提交
+            document.querySelector('.ip-info form #tudex').addEventListener('click', (e) => {
+                let bookname = document.querySelector('.ip-info form .namebox').value
+                let author = document.querySelector('.ip-info form .nameinfo').value
+                let publisher = document.querySelector('.ip-info form .where').value
+                console.log(theid)
+                axios({
+                    url: `http://hmajax.itheima.net/api/books/${theid}`,
+                    method: 'PUT',
+                    data: {
+                        bookname,
+                        author,
+                        publisher,
+                    }
+
+
+                }).then((re) => {
+                    getbooks()
+                    alert(re.data.message)
+                })
+            })
+        }
+        overfull()
+
+
+    </script>
+
+</body>
+
+</html>

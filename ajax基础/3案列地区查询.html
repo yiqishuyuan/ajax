@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <input class="ps" type="text" placeholder="省份">
+    <input class="s" type="text" placeholder="市">
+    <input type="submit" value="查询" class="reserch">
+
+    <ul class="map-l">
+        <li class="item"></li>
+    </ul>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+       document.querySelector('.reserch').addEventListener('click',()=>{
+        const ps = document.querySelector('.ps').value
+        let s = document.querySelector('.s').value
+    
+        axios({
+            url:"http://hmajax.itheima.net/api/area",
+            params:{
+                pname:ps,
+                cname:s,
+            }
+        }).then(re=>{
+                list_area = re.data.list
+                let listli = list_area.map(area=>`<li class="item">${area}</li>`).join('')
+                document.querySelector('.map-l').innerHTML = listli
+            })
+     })
+
+     
+    //  console.log(p)
+        
+    </script>
+</body>
+</html>

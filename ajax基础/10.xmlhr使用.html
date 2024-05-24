@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const xhl = new XMLHttpRequest()
+        xhl.open('get','http://hmajax.itheima.net/api/province')
+        // 监听
+        xhl.addEventListener('loadend',()=>{
+            
+            
+            // 转字符串
+            const data =JSON.parse(xhl.response)
+            console.log(data.list)
+            document.write(data.list)
+        })
+        // 发起请求
+        xhl.send()
+    </script>
+</body>
+</html>

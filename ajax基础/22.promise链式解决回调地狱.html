@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    省份：
+    <input type="text" name="" id="1" placeholder="省份" class="p">
+    城市：
+    <input type="text" name="" id="2" placeholder="城市" class="c">
+    地区：
+    <input type="text" name="" id="3" placeholder="地区" class="a">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let pname = ''
+        axios({ url: 'http://hmajax.itheima.net/api/province' }).then(re=>{
+            // console.log(re)
+            pname =  re.data.list[0]
+            document.querySelector('.p').value = pname
+            return axios({url:'http://hmajax.itheima.net/api/city',params:{pname}})
+        }).then(re=>{
+            // console.log(re)
+            const cname = re.data.list[0]
+            document.querySelector('.c').value = cname
+            return axios({url:'http://hmajax.itheima.net/api/area',params:{pname,cname}})
+        }).then(re=>{
+            const aname = re.data.list[0]
+            document.querySelector('.a').value = aname
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul class="my-p"></ul>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+       const bjw = axios({url:'http://hmajax.itheima.net/api/weather',params:{city:'110100'}})
+       const shw = axios({url:'http://hmajax.itheima.net/api/weather',params:{city:'310100'}})
+       const gzw = axios({url:'http://hmajax.itheima.net/api/weather',params:{city:'440100'}})
+       const szw = axios({url:'http://hmajax.itheima.net/api/weather',params:{city:'440300'}})
+    //    使用promise.all,参数为列表
+       const p = Promise.all([bjw,shw,gzw,szw])
+       p.then(re=>{
+        console.log(re)
+        const htstr = re.map(item=>{
+            return `<li>${item.data.data.area}---${item.data.data.weather}</li>`
+        }).join('')
+        console.log(htstr)
+        document.querySelector('.my-p').innerHTML = htstr
+       }).catch(re=>{
+        console.dir(re)
+       })
+    </script>
+</body>
+</html>

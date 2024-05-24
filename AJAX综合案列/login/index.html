@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../other/request.js"></script>
+    <!-- <script src="./index.js"></script> -->
+   
+</head>
+
+<body>
+    <!-- 登录 -->
+    <form method="post">
+        <input type="text" name="phone" class="phone" value="13888888888">
+        <input type="password" name="phone" class="pwd" value="246810">
+        <button type="button" class="btn">登录</button>
+    </form>
+
+    <script>
+        document.querySelector('form .btn').addEventListener('click', () => {
+            // 获取值
+            const mobile = document.querySelector('form .phone').value
+            const code = document.querySelector('form .pwd').value
+            // console.log(mobile, code)
+            // 请求
+            axios({
+                // 请求后缀
+                url:'/v1_0/authorizations',
+                method:'post',
+                data:{
+                    mobile,
+                    code
+                }
+            }).then(re=>{
+                // 请求成功后，存入token
+                localStorage.setItem('token',re.data.data.token)
+                // 跳转
+                location.href = '../content/index.html'
+                console.log(re)
+                alert(re.data.message)
+            }).catch(re=>{
+                console.dir(re.response.data.message)
+                alert(re.response.data.message)
+            })
+        })
+    </script>
+</body>
+
+</html>

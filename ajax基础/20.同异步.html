@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 同步和异步
+        // 同步
+        const re = 0 +1
+        console.log(re)
+        // 异步
+        setTimeout(()=>{console.log(4)},2000)
+        // 同步
+        console.log(3)
+        // 同步即在不阻塞代码依顺序执行
+        // 异步通常含有回调
+        // 打印为1，3，4
+    </script>
+</body>
+</html>

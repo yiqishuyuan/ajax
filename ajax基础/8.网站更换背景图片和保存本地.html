@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            
+        }
+        body{
+            background-image: url() ;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            /* background-size:100% 100%; */
+            
+        }
+    </style>
+</head>
+<body>
+    <input type="file" name="user-img" id="1" class="upimg">
+    <!-- <img src="" alt=""> -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.querySelector('.upimg').addEventListener('change',(e)=>{
+            console.log(e.target.files[0])
+            // 构造对象
+            const fp = new FormData()
+            fp.append('img',e.target.files[0])
+            axios({
+                url:"http://hmajax.itheima.net/api/uploadimg",
+                method:'POST',
+                data:fp
+            }).then(re=>{
+                console.log(re.data.data.url)
+                document.body.style.backgroundImage = `url(${re.data.data.url})`
+                // 保存本地
+                localStorage.setItem('bkimg',re.data.data.url)
+            })
+        })
+        // 本地持续化
+        const reimg = localStorage.getItem('bkimg')
+        console.log(reimg)
+        // 判断
+        reimg && (document.body.style.backgroundImage = `url(${reimg})`)
+    </script>
+</body>
+</html>

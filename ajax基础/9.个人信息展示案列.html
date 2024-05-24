@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .user-info {
+            width: 300px;
+            height: 600px;
+        }
+
+        .user-info .user-img img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="user-info">
+        <span>邮箱</span>
+        <input type="text" name="user" id="1" class="user-info-el">
+        <hr>
+        <span>昵称</span>
+        <input type="text" name="user-name" id="2" class="user-name-info">
+        <hr>
+        <span>性别</span>
+        男<input type="radio" name="性别" id="0" class="slary" value="0">
+        女<input type="radio" name="性别" id="1" class="slary" value="1">
+        <hr>
+        <span>简介</span>
+        <textarea name="intr" id="" cols="30" rows="10"></textarea>
+        <input type="button" value="更改" class="boxinfo">
+        <hr>
+        <div class="user-img">
+            <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="">
+            <!-- <input type="file" name="photo" id="1"> -->
+            <input type="file" value="更新图片" class="updata-img">
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // 先更新
+        const creator = 'lily'
+        function getdata() {
+            axios({
+                url: "http://hmajax.itheima.net/api/settings",
+                params: {
+                    // 需要申请者
+                    creator,
+
+                }
+            }).then(re => {
+                list_date = re.data.data
+                //  console.log(list_date)
+                //  使用对象
+                for (const key in list_date) {
+                    if (key === 'avatar') {
+                        console.log(list_date[key])
+                        document.querySelector('.user-img img').src = list_date[key]
+                    }
+                    else if (key === 'nickname') {
+                        document.querySelector('.user-info .user-name-info').value = list_date[key]
+                    }
+                    else if (key === 'email') {
+                        document.querySelector('.user-info .user-info-el').value = list_date[key]
+                    }
+                    else if (key === 'gender') {
+                        const gender = document.querySelectorAll('.user-info .slary')
+                        console.log(gender)
+                        const gendernum = list_date[key]
+                        console.log(gendernum)
+                        gender[gendernum].checked = true
+
+                    }
+                    else {
+                        document.querySelector('textarea').value = list_date[key]
+                    }
+                }
+            })
+        }
+        getdata()
+        // 更新图片
+        function photoconf() {
+            document.querySelector('.user-img .updata-img').addEventListener('change', (e) => {
+                console.log(e.target.files[0])
+                const fd = new FormData()
+                //  更新信息需要用户识别
+                fd.append('avatar', e.target.files[0])
+                fd.append('creator', creator)
+                axios({
+                    url: "http://hmajax.itheima.net/api/avatar",
+                    method: 'PUT',
+                    data: fd,
+                }).then(re => {
+                    console.log(re)
+                    // 展示
+                    document.querySelector('.user-img img').src = re.data.data.avatar
+                    // console.log(re.data.data.avatar)
+                    getdata()
+                })
+            })
+
+        }
+        photoconf()
+        // 更新个人文字信息
+        function userinfo() {
+            document.querySelector('.user-info .boxinfo').addEventListener('click', (e) => {
+                const email = document.querySelector('.user-info .user-info-el').value
+                const nickname = document.querySelector('.user-info .user-name-info').value
+                const gender = document.querySelectorAll('.user-info .slary')
+                const desc = document.querySelector('.user-info textarea').value
+                // console.log(email, nickname, gender, desc)
+              
+                gender_num = null
+                 for(let i = 0;i<gender.length;i++){
+                    // console.log(gender[i].checked)
+                    if(gender[i].checked === true){
+                         gender_num = i
+                    }
+                 }
+                 console.log(gender_num)
+
+
+                axios({
+                    url: "http://hmajax.itheima.net/api/settings",
+                    method:'PUT',
+                    data:{
+                       creator,
+                       email,
+                       gender:gender_num,
+                       desc,
+                    }
+                }).then(re=>{
+                    console.log(re)
+                    getdata()
+                })
+            })
+        }
+
+        userinfo()
+    </script>
+
+</body>
+
+</html>

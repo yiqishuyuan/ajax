@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100%;
+
+
+        }
+
+        .inner-top {
+            width: 1000px;
+            height: 400px;
+            background-color: aqua;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            /* content-visibility: visible; */
+        }
+
+        .inner-top .content {
+            width: 300px;
+            list-style-type: none;
+            content: center;
+        }
+
+        .inner-top .content img {
+            width: 250px;
+        }
+
+        .inner-top .content p {
+            width: 250px;
+            text-align: center;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul class="inner-top">
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+
+        </ul>
+        <!-- <ul class="inner-top">
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+            <li class="content">
+                <img src="./photo/4c048b5388f5467ca2d623e552788059_tplv-dy-aweme-images_q75.webp" alt="" srcset="">
+                <p>美食</p>
+            </li>
+
+        </ul> -->
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // top层
+        axios({
+            url: 'http://hmajax.itheima.net/api/category/top'
+        }).then(re => {
+
+            const main_data = re.data.data
+            console.log(main_data)
+            // 二层
+            const subdata_v = main_data.map(item => {
+                // 根据商品id返回商品信息
+                return axios({
+                    url: 'http://hmajax.itheima.net/api/category/sub',
+                    params: {
+                        id: item.id  //item每一个商品id
+                    }
+                })
+            })
+            // console.log(subdata_v)
+            // 返回的promise.all
+            const str_product = Promise.all(subdata_v)
+            str_product.then(re => {
+                const s = re.map(item => {
+                    console.log(item)
+                    const data_c = item.data.data
+                    return `<ul class="inner-top">
+                        <span>${data_c.name}</span>
+                        ${data_c.children.map(item => {
+                        return  `<li class="content">
+                                <img src="${item.picture}" alt="" srcset="">
+                                <p>${item.name}</p>
+                                </li>`
+                        }).join('')}
+                            
+                        </ul>`
+
+                }).join('')
+                document.querySelector('.box').innerHTML = s
+            })
+        })
+    </script>
+
+</body>
+
+</html>

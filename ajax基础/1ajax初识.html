@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 400px;
+            height: 50px;
+            background-color: aqua;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="box">
+        <audio src="" controls></audio>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        axios({
+            url:"http://127.0.0.1:8000/music/"
+        }).then(re=>{
+            console.log(re)
+            console.log(re.data.list)
+            document.querySelector('.box').innerHTML = `<audio src="${re.data.music}" controls></audio>`
+        })
+    </script>
+    
+</body>
+</html>

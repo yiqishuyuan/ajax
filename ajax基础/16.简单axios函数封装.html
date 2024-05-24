@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 创建函数
+        function getaxios(params) {
+            // return返回内置函数
+            return new Promise((resolve,reject)=>{
+                //  发起内置函数请求
+                const  p = new XMLHttpRequest()
+                p.open(params.method || 'get',params.url)
+                p.addEventListener('loadend',()=>{
+                    // 监听
+                    if (p.status>=200 && p.status<300) {
+                        // promise成功
+                        resolve(JSON.parse(p.response))
+                    } else {
+                        reject(new Error(p.response))
+                    }
+                })
+                p.send()
+            })
+        }
+        // 调用
+        getaxios({
+            url:'http://hmajax.itheima.net/api/province'
+        }).then(re=>{
+            console.log(re)
+        }).catch(er=>{
+            console.log(er)
+        })
+    </script>
+</body>
+</html>

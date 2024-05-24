@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="index-box"></div>
+    你好世界，相信事件很快会发生！
+    <script>
+        let time = 5
+
+        function getdata() {
+            // console.log(time !== 0)
+            if (time !== 0) {
+                setInterval(() => {
+                    // document.querySelector('.index-box').innerHTML = `即将跳转！时间：${time--}`
+                location.href = './AJAX综合案列/login/index.html'
+                    location.href = './AJAX综合案列/login/index.html'
+                }, 1000);
+            }
+            else {
+                location.href = './AJAX综合案列/login/index.html'
+            }
+
+        }
+
+        setInterval(getdata, 5000);
+    </script>
+</body>
+
+</html>

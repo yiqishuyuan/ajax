@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="" method="">
+        地区选择
+        <div class="province">
+            <input type="text" name="省份" id="" placeholder="省份">
+            <select name="" id="" class="px">
+                <option value="北京">北京</option>
+
+            </select>
+        </div>
+        <div class="city">
+            <input type="text" name="城市" id="" placeholder="城市">
+            <select name="" id="">
+                <option value="北京">北京</option>
+
+            </select>
+        </div>
+        <div class="area">
+            <input type="text" name="市县" id="" placeholder="市/县">
+            <select name="" id="">
+                
+            </select>
+        </div>
+        你的称呼 &nbsp;<input type="text" name="name" id="" class="nickname">
+        <!-- &nbsp; -->
+        你的建议<textarea name="advice" id="" cols="30" rows="10"></textarea>
+        <input type="button" value="确定提交" class="btn">
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      /*  
+         注意：该处采用了回调函数地狱模式，如果使用则可能阅读性不佳，建议采用promise链式调用和async/await
+      
+      */  
+        //    先更新函数     
+        function getdata() {
+            axios({
+                url: "http://hmajax.itheima.net/api/province",
+
+            }).then(re => {
+                // console.log(re.data.list[0])
+                const p = re.data.list.map(item => {
+                    return `<option value="${item}">${item}</option>`
+                }).join('')
+                document.querySelector('.province .px').innerHTML = `<option value="">省份</option>` + p
+                document.querySelector('.city select').innerHTML = `<option value="">城市</option>`
+                    document.querySelector('.area select' ).innerHTML = `<option value="">区/县</option>` 
+                // 城市事件监听
+                document.querySelector('.province select').addEventListener('change', async (e) => {
+                    console.log(e.target.value)
+                    document.querySelector('.province input').value = e.target.value
+                    // 请求城市
+                    const city = await axios({
+                        url: 'http://hmajax.itheima.net/api/city',
+                        params: {
+                            pname: e.target.value
+                        }
+                    })
+                    // console.log(city)
+                    const city_str = city.data.list.map(item => {
+                          console.log(item)
+                          return `<option value="${item}">${item}</option>`
+                    }).join('')
+                    // console.log(city_str)
+                    document.querySelector('.city select').innerHTML = `<option value="">城市</option>` + city_str
+                  
+                    document.querySelector('.area select' ).innerHTML = `<option value="">区/县</option>` 
+                })
+                // 请求区县
+                document.querySelector('.city select').addEventListener('change',async (e)=>{
+                    //  console.log(e.target.value)
+                    
+                     document.querySelector('.city input').value = e.target.value
+                     const area = await axios({
+                        url:'http://hmajax.itheima.net/api/area',
+                        params:{
+                            pname:document.querySelector('.province input').value,
+                            cname:document.querySelector('.city input').value
+                        }
+                     })
+                    // console.log(area)
+                    const area_str = area.data.list.map(item =>{
+                        return `<option value="${item}">${item}</option>`
+                    }).join('')
+                    // console.log(area_str)
+                    document.querySelector('.area select').innerHTML = `<option value="市县">市/县</option>` + area_str
+                    
+ 
+                })
+                document.querySelector('.area select').addEventListener('change',e=>{
+                     document.querySelector('.area input').value = e.target.value
+                })
+
+            })
+            document.querySelector('form .btn').addEventListener('click',()=>{
+                // 由于没有专门的收集表单的js库，则自收集
+                const province = document.querySelector('.province input').value
+                const city = document.querySelector('.city input').value
+                const area = document.querySelector('.area input').value
+                const nickname = document.querySelector('.nickname').value
+                const feedback = document.querySelector('textarea').value
+                // 提交数据
+                
+                axios({
+                    url:"http://hmajax.itheima.net/api/feedback",
+                    method:'post',
+                    data:{
+                        province,
+                        city,
+                        area,
+                        nickname,
+                        feedback
+                    }
+                }).then(re=>{
+                    // console.log(re)
+                    alert(re.data.message)
+                }).catch(
+                    alert('no write')
+                )
+        
+            })
+        }
+        getdata()
+    </script>
+</body>
+
+</html>

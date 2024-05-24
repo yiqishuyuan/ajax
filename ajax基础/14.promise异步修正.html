@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 使用内置函数对象,形参传值
+        const  p = new Promise( (re,error)=>{
+            // 异步代码
+                setTimeout(() => {
+                    // 成功
+                    re('请求成功')
+                    // 失败
+                    error(new Error('请求失败'))
+                }, 2000);
+        })
+        // 成功则获取结果
+        p.then(re=>{
+            console.log(re)
+        }).catch(error=>{
+            console.log(error)
+        })
+        // 不成功便失败！
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button class="btn">提交</button>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.querySelector('.btn').addEventListener('click', () => {
+            axios({
+                url: "http://hmajax.itheima.net/api/register",
+                // 提交方式
+                method: 'post',
+                // 提交的数据
+                data: {
+                    username: 'lily1234',
+                    password: '102023',
+                }
+            }).then(re => {
+                console.log(re)
+
+            }).catch(error=>{
+                console.log(error.response.data.message)
+                alert(error.response.data.message)
+                // 如果已经注册则报错，使用catch返回错误信息
+            })
+        })
+    </script>
+</body>
+
+</html>

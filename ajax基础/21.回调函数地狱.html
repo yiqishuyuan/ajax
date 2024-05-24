@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    省份：
+    <input type="text" name="" id="1" placeholder="省份" class="p">
+    城市：
+    <input type="text" name="" id="2" placeholder="城市" class="c">
+    地区：
+    <input type="text" name="" id="3" placeholder="地区" class="a">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // 回调地狱即axios多层嵌套，阅读性差，修改困难
+        // 顶层
+        axios({ url: 'http://hmajax.itheima.net/api/province' }).then(re => {
+            // console.log(re.data.list[0])
+            const pname = re.data.list[0]
+            document.querySelector('.p').value = pname
+            // 次层
+            axios({ url: 'http://hmajax.itheima.net/api/city', params: { pname } }).then(re => {
+                // console.log(re)
+                const cname = re.data.list[0]
+                // console.log(cname)
+                document.querySelector('.c').value = cname
+                // 第三层
+                axios({ url: 'http://hmajax.itheima.net/api/area', params: { pname, cname } }).then(re => {
+                    // console.log(re)
+                    const aname = re.data.list[0]
+                    // console.log(cname)
+                    document.querySelector('.a').value = aname
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    省份：
+    <input type="text" name="" id="1" placeholder="省份" class="p">
+    城市：
+    <input type="text" name="" id="2" placeholder="城市" class="c">
+    地区：
+    <input type="text" name="" id="3" placeholder="地区" class="a">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 解决回调地狱 -->
+    <script>
+        // 在具名函数前声明async,则该函数为异步函数
+        async function getdefualtarea() {
+            // 错误捕捉
+            try {
+                // 使用await关键字
+                const pobj = await axios({ url: 'http://hmajax.itheima.net/api/province' })
+                const pname = pobj.data.list[0]
+                const cobj = await axios({ url: 'http://hmajax.itheima.net/api/city', params: { pname } })
+                const cname = cobj.data.list[0]
+                const aobj = await axios({ url: 'http://hmajax.itheima.net/api/area', params: { pname, cname } })
+                const aname = aobj.data.list[0]
+                // 填写
+                document.querySelector('.p').value = pname
+                document.querySelector('.c').value = cname
+                document.querySelector('.a').value = aname
+            }catch(error){
+                console.dir(error)
+            }
+        }
+        // 调用
+        getdefualtarea()
+    </script>
+</body>
+
+</html>

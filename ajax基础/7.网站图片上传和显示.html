@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" name="user-img" id="1" class="upimg">
+    <img src="" alt="">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+    document.querySelector('.upimg').addEventListener('change',(e)=>{
+           console.log(e.target.files[0])
+        //    表单请求体构造函数
+       const fp= new FormData()
+       fp.append('img',e.target.files[0])
+       axios({
+        url: "http://hmajax.itheima.net/api/uploadimg",
+        method:'POST',
+        data:fp,
+       }).then(re=>{
+        alert(re.data.message)
+        console.log(re.data.data.url)
+        console.log(re.data.data)
+           document.querySelector('img').src = re.data.data.url
+       })
+    })
+    </script>
+</body>
+</html>
